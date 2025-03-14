@@ -1,4 +1,4 @@
-
+import time
 '''
 Bank account class: Provides the user with options toe either sign up or log in to a bank account.
 For each created user, the bank acc class stores their information and provides the ability to
@@ -28,26 +28,45 @@ class BankAccounts:
 
     # If user already has created an acc this is a way to access the data 
     def login(self):
+        
         username = input("Enter your username: ")
-        password = input("Enter your password: ")
-
         self.clear_screen()
 
         # Checks to see if username exists
         if username not in self.userdc:
-            print("Username not found")
-            return None
-
-        # Checks if username is located in the user dictionary AND check if the password matches
-        elif (username in self.userdc) and (self.userdc[username].password == password):
-            print("USER INFORMATION\n")
-            return self.userdc[username] #return user object
-        
-        # If password doesnt match, print error statement
-        else:
-            print("Password does not match ")
+            print("Username not found\nBack to main menu...")
+            time.sleep(5)
             self.clear_screen()
             return None
+
+        
+        # Checks if password matches the username
+        # If it matches return user object
+        # If it does not match, prompt for user to enter new password
+        # Repeat until password matches
+        while True: 
+
+            password = input("Enter your password: ")
+            self.clear_screen()
+
+            print("Checking password...")
+            time.sleep(3)
+            
+
+            if (self.userdc[username].password == password):
+                print("\nCorrect password!")
+                time.sleep(3)
+                self.clear_screen()
+
+                return self.userdc[username] #return user object
+            
+            # If password doesnt match, print error statement
+            else:
+                print("\nIncorrect password\n")
+                time.sleep(1)
+                print("Trying again...")
+                time.sleep(3)
+                self.clear_screen()
             
          
 
@@ -55,23 +74,31 @@ class BankAccounts:
     def signup(self):
 
         username = input("Enter your username: ") 
-       
+        self.clear_screen()
+
         # If username already exists, inform user
         if username in self.userdc:
-            print("Username already exists\nPlease log in")
+            
+            print("Username already exists\nBack to main menu...")
+            time.sleep(5)
             self.clear_screen()
             return None
         
         # Create new user
         password = input("Enter your password: ")
         self.clear_screen()      
-          
+        
+        print("Loading...")
+        time.sleep(3)
+        self.clear_screen()
+
         new_user = User(username, password)
         self.userdc[username] = new_user
         new_user.personal_information()
         new_user.choose_acc()
         
         print("Success!")
+        time.sleep(5)
         self.clear_screen()
         return new_user
 
@@ -80,24 +107,35 @@ class BankAccounts:
     #The starup to the program: Allows the user to choose whether they want to signin, signup, or exit
     def start(self):
 
-        print("WELCOME TO THE BANK ACCOUNT SYSTEM\n-----------------------------------")
+        print("WELCOME TO THE BANK ACCOUNT SYSTEM\n")
 
         while True: 
-        
+            
+            print("MAIN MANU\n-----------------------------------")
             options = ["Sign up", "Log in", "Exit"]
             for i, option in enumerate(options, 1):
                 print(f'{i}) {option}')
 
             try:
-                action = int(input("-----------------------------------\nWhat would you like to do: "))
+                print("-----------------------------------")
+                action = int(input("What would you like to do: "))
                 self.clear_screen()
+
                 if action == 1:
                     self.signup()
 
                 elif action == 2:
                     user = self.login()
-                    print("YOUR RETRIEVED INFORMATION")
-                    user.display_info()
+
+                    if user == None:
+                        continue
+                    else:
+                        print("YOUR RETRIEVED INFORMATION")
+                        user.display_info()
+                        time.sleep(5)
+                        
+                        cont = input("\nPress enter to continue ")
+                        self.clear_screen()
 
                 elif action == 3:
                     print("GOODBYE")
@@ -152,7 +190,8 @@ class User:
     # Stores the information in the corresponding instance variable
     def personal_information(self):
         
-        print("\nPlease accurately fill out all the required questions\n-----------------------------------")
+        print("Please accurately fill out all the required questions\n-----------------------------------")
+        time.sleep(3)
         self.name = input(str("Full name: "))
         self.DoB = input(str("Date of Birth: "))
         self.SSN = input(str("Social Security Number: "))
@@ -160,6 +199,9 @@ class User:
         self.phonenumber = input(str("Phone Number: "))
         self.email = input(str("Email: "))
         self.initial_deposit = input(str("Initial Deposit: "))
+        print("-----------------------------------")
+        print("Analyzing...")
+        time.sleep(3)
         self.clear_screen()
     
 
@@ -168,6 +210,7 @@ class User:
     # 2. Bank Account Category
     def choose_acc(self):
         print("In this section you will choose the specificalities of your bank account\n-----------------------------------")
+        time.sleep(3)
         
         # Iterates through the types of bank accounts, showcasing them to user
         account_types = ["Personal", "Business", "Investment"]
@@ -177,7 +220,7 @@ class User:
         # Promps user to choose their bank account
         # Stores choice as an index of the account_types array
         # Assigns Bank account type instance variable the value of the choice index
-        account_type_choice = int(input("Choose which account you would like to create: ")) - 1
+        account_type_choice = int(input("-----------------------------------\nChoose which account you would like to create: ")) - 1
         self.account_type = account_types[account_type_choice]
         self.clear_screen()
 
@@ -198,8 +241,12 @@ class User:
             print(f'{i}) {option}')
 
         # Prompts user to choose the specialized acc
-        specific_acc_choice = int(input("Choose which type of account you would like: ")) - 1
+        specific_acc_choice = int(input("-----------------------------------\nChoose which type of account you would like: ")) - 1
         self.specific_account = options[specific_acc_choice]
+        self.clear_screen()
+
+        print("Creating account...")
+        time.sleep(3)
         self.clear_screen()
 
     # Displays all user that is attatched to a username when said username is inputted
@@ -207,7 +254,7 @@ class User:
         print("Account Details\n")
         print(f"Name: {self.name}")
         print(f"Date of Birth: {self.DoB}")
-        print(f"SSN/Tax ID: {self.SSN}")
+        print(f"Social Security Number: {self.SSN}")
         print(f"Address: {self.address}")
         print(f"Phone: {self.phonenumber}")
         print(f"Email: {self.email}")
@@ -235,29 +282,3 @@ bank_system.start()
 
 
 
-
-
-
-
-
-# types_of_accounts = ("1) Personal" , "2) Business" ,"3) Investment & Retirement" )
-
-# personal_acc = ["1) Checking Account" , "2) Savings Account" , ]
-# business_acc = ["1) Business Checkings Account" , "2) Business Savings Account "]
-# investment_retirement_acc = ["1) Individual Retirement Account" , "2) Health Savings Account"]
-
-# user_choice = {
-#     "Personal " :{"Type: ": ""}
-#     "Business " :{"Type: ": ""}
-#     "Investment and Retirement " :{"Type: ": ""}
-# }
-
-# print("Welcome! I can assist you in opening a bank account.")
-
-# def user_help:() 
-#     for accounts in types_of_accounts:
-#         print(accounts)
-
-#     user_choice ("What type of account are you looking for?")
-
-# user_help()
