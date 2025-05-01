@@ -1,6 +1,6 @@
 import time
 '''
-Bank account class: Provides the user with options toe either sign up or log in to a bank account.
+Bank account class: Provides the user with options to either sign up or log in to a bank account.
 For each created user, the bank acc class stores their information and provides the ability to
 call this data up when requested.
 
@@ -119,6 +119,8 @@ class BankAccounts:
             try:
                 print("-----------------------------------")
                 action = int(input("What would you like to do: "))
+                print('Loading...')
+                time.sleep(3)
                 self.clear_screen()
 
                 if action == 1:
@@ -142,10 +144,18 @@ class BankAccounts:
                     break
 
                 else:
+                    self.clear_screen()
                     print("Invalid option")
+                    time.sleep(3)
+                    self.clear_screen()
 
             except ValueError:
+                print('loading...')
+                time.sleep(3)
+                self.clear_screen()
                 print("Please enter a valid option")
+                time.sleep(3)
+                self.clear_screen()
 
 
 
@@ -220,7 +230,18 @@ class User:
         # Promps user to choose their bank account
         # Stores choice as an index of the account_types array
         # Assigns Bank account type instance variable the value of the choice index
-        account_type_choice = int(input("-----------------------------------\nChoose which account you would like to create: ")) - 1
+        while True:
+            try:
+                account_type_choice = int(input("-----------------------------------\nChoose which account you would like to create: ")) - 1
+                if account_type_choice < 0 or account_type_choice >= len(account_types):
+                    print("Please choose a valid option from the list.")
+                    continue
+                else:
+                    break
+            except ValueError:
+                print("Please choose a valid option from the list.")
+                continue
+        
         self.account_type = account_types[account_type_choice]
         self.clear_screen()
 
@@ -241,7 +262,18 @@ class User:
             print(f'{i}) {option}')
 
         # Prompts user to choose the specialized acc
-        specific_acc_choice = int(input("-----------------------------------\nChoose which type of account you would like: ")) - 1
+        while True:
+            try:
+                specific_acc_choice = int(input("-----------------------------------\nChoose which type of account you would like: ")) - 1
+                if specific_acc_choice < 0 or specific_acc_choice >= len(options):
+                    print("Please choose a valid option from the list.")
+                    continue
+                else:
+                    break
+            except ValueError:
+                print("Please choose a valid option from the list.")
+                continue
+
         self.specific_account = options[specific_acc_choice]
         self.clear_screen()
 
